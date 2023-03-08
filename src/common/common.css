@@ -1,0 +1,47 @@
+.bg-primary {
+    background-color: #3f51b5 !important;
+}
+
+.text-primary {
+    color: #3f51b5 !important;
+}
+
+.bg-secondary {
+    background-color: red !important;
+
+}
+
+.text-secondary {
+    color: red !important;
+}
+
+.form-container{
+    margin-top: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-icon{
+    margin:8px;
+}
+
+.form-fields{
+    margin-top:24px;
+}
+
+.form-fields .submit-button{
+    margin-top: 24px;
+    margin-bottom: 16px;
+}
+
+.form-container + .copyright {
+    margin-top: 64px;
+    margin-bottom: 32px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.link-decoration{
+    text-decoration: none;
+}

@@ -1,0 +1,30 @@
+.appbar {
+    position: static;
+}
+
+.navbar .icon-container {
+    color:white;
+    width: 40px;
+}
+
+.box-container {
+    flex-grow: 1;
+}
+
+.navbar{
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.navbar-nav{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.navbar-nav .navbar-nav-items{
+    color:inherit;
+    font-size: 0.9rem;
+    margin-left: 25px;
+}

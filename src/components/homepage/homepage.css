@@ -1,0 +1,38 @@
+.product-page{
+    display: flex;
+    flex-direction: column;
+}
+.product-page-container{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.card {
+    max-width: 350px;
+    margin-left: 100px;
+    margin-bottom: 50px;
+}
+
+.card-media {
+    height: 200px;
+}
+.card-content{
+    height: 200px;
+}
+.card-space-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card .buy-button {
+    text-decoration: none;
+    color: white;
+}
+
+.filter{
+    margin-left: 100px;
+    margin-bottom: 20px;
+    width:200px;
+}
