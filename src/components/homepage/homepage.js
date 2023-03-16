@@ -33,6 +33,7 @@ const Homepage = () => {
     { value: "lowtohigh", label: "Price: Low to High" },
     { value: "newest", label: "Newest" }
   ];
+  
 
   const onSortbySelect = (event) => {
 
