@@ -1,0 +1,15 @@
+.addproduct-form {
+    margin-top: 50px;
+}
+
+.add-product-notification div{
+     background-color: rgb(71, 184, 71);
+     color: white;
+}
+.add-product-select{
+    z-index: 2
+}
+
+.add-product-item{
+    z-index: 0
+}

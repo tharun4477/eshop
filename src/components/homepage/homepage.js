@@ -12,24 +12,35 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ProductCategoryTabs from '../../common/product-category-tabs/product-category-tabs';
 import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import { Link as RouterLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import Snackbar from '@mui/material/Snackbar';
+import CloseIcon from '@mui/icons-material/Close';
+import Select from "react-select";
+import Modal from 'react-modal';
 
-const Homepage = React.memo(() => {
-  const { signin, productInfo, countryCurrency, filter } = useSelector(state => state);
+const Homepage = () => {
+  const { signin, productInfo, countryCurrency, filters, homeNotification } = useSelector(state => state);
+  const [category, setcategory] = React.useState("all");
+  const [sortby, setsortby] = React.useState("default");
+  const [filteredInfo, setFilteredInfo] = React.useState([...productInfo]);
+
   const dispatch = useDispatch();
-  let filteredInfo = filter.filteredProductInfo;
+
+  const options = [
+    { value: "all", label: "Default" },
+    { value: "hightolow", label: "Price: High to Low" },
+    { value: "lowtohigh", label: "Price: Low to High" },
+    { value: "newest", label: "Newest" }
+  ];
 
   const onSortbySelect = (event) => {
-    const filterInput = event.target.value;
-    let filteredInfo = productInfo;
 
-    filteredInfo = filteredInfo.filter(product => product.category === filter.category || filter.category === "all" ? true : false);
+    let filteredInfo = [...productInfo];
 
-    switch (event.target.value) {
+    filteredInfo = filteredInfo.filter(product => product.category === category || category === "all" ? true : false);
+
+    switch (event.value) {
       case "hightolow":
         filteredInfo = filteredInfo.sort((product1, product2) => product2.price - product1.price);
         break;
@@ -40,19 +51,19 @@ const Homepage = React.memo(() => {
         filteredInfo = filteredInfo.sort((product1, product2) => product2.id - product1.id);
         break;
       default:
-        return;
+        break;
     }
-
-    dispatch({ type: "SET_FILTER", payload: { sortby: filterInput, filteredProductInfo: filteredInfo } });
+    setsortby(event.value);
+    setFilteredInfo([...filteredInfo]);
   }
 
   const onCategorySelect = (event) => {
-    const filterInput = event.target.value;
+    const filterInput = event.target.textContent;
     let filteredInfo = productInfo;
 
     filteredInfo = filteredInfo.filter(product => product.category === filterInput || filterInput === "all" ? true : false);
 
-    switch (filter.sortby) {
+    switch (sortby) {
       case "hightolow":
         filteredInfo = filteredInfo.sort((product1, product2) => product2.price - product1.price);
         break;
@@ -65,27 +76,56 @@ const Homepage = React.memo(() => {
       default:
         break;
     }
-    dispatch({ type: "SET_FILTER", payload: { category: filterInput, filteredProductInfo: filteredInfo } });
+    setcategory(event.target.value);
+    setFilteredInfo([...filteredInfo]);
   }
 
+  const onDeleteProduct = (targetProduct, event) => {
+    const updatedInfo = productInfo.filter(product => targetProduct != product);
+    dispatch({ type: "DELETE_PRODUCT_INFO", payload: updatedInfo });
+    dispatch({ type: "SET_HOME_NOTIFICATION", payload: { status: true, message: "Product " + targetProduct.name + " deleted successfully" } });
+    setFilteredInfo(updatedInfo);
+  }
+
+  const onClose = (event) => {
+    dispatch({ type: "SET_HOME_NOTIFICATION", payload: { status: false } });
+  };
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={onClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
   return (
     <Box className="product-page">
-      <ProductCategoryTabs categorySelect={filter.category} handleCategorySelect={onCategorySelect} />
+      <ProductCategoryTabs category={filters} categorySelect={category} handleCategorySelect={onCategorySelect} />
       <Box className="filter">
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Sort by:</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            value={filter.sortby}
-            label="sortby"
-            onChange={onSortbySelect}
-          >
-            <MenuItem value="default">Default</MenuItem>
-            <MenuItem value="hightolow">Price: High to Low</MenuItem>
-            <MenuItem value="lowtohigh">Price: Low to High</MenuItem>
-            <MenuItem value="newest">Newest</MenuItem>
-          </Select>
-        </FormControl>
+        <InputLabel id="demo-simple-select-label">Sort by:</InputLabel>
+        <Select
+          options={options}
+          onChange={onSortbySelect}
+          value={options.filter(function (option) {
+            return option.value === sortby;
+          })}
+          label="Single select"
+        />
+        <div className='home-notification-section' >
+          <Snackbar
+            open={homeNotification.status}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            autoHideDuration={2000}
+            onClose={onClose}
+            message={homeNotification.message}
+            action={action}
+          />
+        </div>
       </Box>
       <Box className="product-page-container">
         {
@@ -94,6 +134,7 @@ const Homepage = React.memo(() => {
               <CardMedia
                 className='card-media'
                 image={product.source}
+                alt={product.name}
               />
               <CardContent className="card-content">
                 <Typography className='card-space-between' gutterBottom variant="h5" component="div" >
@@ -108,16 +149,22 @@ const Homepage = React.memo(() => {
                 <RouterLink
                   to={{
                     pathname: "/products/" + product.id,
-                    state: { product: product, categorySelect: filter.category }
+                    state: { product: product, categorySelect: category }
                   }} className='link-decoration'>
                   <Button className='bg-primary buy-button'>Buy</Button>
                 </RouterLink>
                 {signin.isAdmin ?
                   <Box>
-                    <IconButton>
-                      <CreateIcon />
-                    </IconButton>
-                    <IconButton>
+                    <RouterLink
+                      to={{
+                        pathname: "/modifyproducts/" + product.id,
+                        state: { product: product }
+                      }} className='link-decoration'>
+                      <IconButton >
+                        <CreateIcon />
+                      </IconButton>
+                    </RouterLink>
+                    <IconButton onClick={(event) => onDeleteProduct(product, event)}>
                       <DeleteIcon />
                     </IconButton>
                   </Box> : <Box />
@@ -130,6 +177,6 @@ const Homepage = React.memo(() => {
 
     </Box>
   );
-})
+}
 
 export default Homepage;

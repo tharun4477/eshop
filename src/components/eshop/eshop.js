@@ -7,6 +7,9 @@ import SignUp from "../signup/signup";
 import Homepage from "../homepage/homepage"
 import ProductDetails from "../product-details/product-details"
 import "../../common/common.css";
+import Order from "../orders/order";
+import AddProduct from "../add-product/add-product";
+import ModifyProduct from "../modify-product/modify-product";
 
 const Eshop = React.memo(() => {
   const { signin, signup, userInfo } = useSelector(state => state);
@@ -51,7 +54,7 @@ const Eshop = React.memo(() => {
       dispatch({ type: "POST_SIGN_UP_INFO", payload: { isUserExits: false, isPasswordMatch: false } });
     }
   };
-  
+
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -68,8 +71,17 @@ const Eshop = React.memo(() => {
         <Route path="/home" render={({ history }) =>
           <Homepage />}
         />
-        <Route path="/products/:id" render={({ history }, props) =>
-          <ProductDetails {...props}/>}
+        <Route path="/products/:id" render={(props) =>
+          <ProductDetails {...props} />}
+        />
+        <Route path="/orders" render={(props) =>
+          <Order {...props}/>}
+        />
+        <Route path="/addproduct" render={(props) =>
+          <AddProduct {...props}/>}
+        />
+        <Route path="/modifyproducts/:id" render={(props) =>
+          <ModifyProduct {...props}/>}
         />
       </Router>
     </div >

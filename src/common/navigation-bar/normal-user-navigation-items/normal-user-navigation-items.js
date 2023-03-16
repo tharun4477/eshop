@@ -5,7 +5,7 @@ import { Link as MaterialLink } from "@mui/material";
 import Button from '@mui/material/Button';
 import SearchBar from "../search-bar/search-bar";
 
-const NomralUserNavigationItems = React.memo(()=> {
+const NomralUserNavigationItems = React.memo((props)=> {
     return (
         <Box className="navbar">
             <SearchBar />
@@ -14,12 +14,14 @@ const NomralUserNavigationItems = React.memo(()=> {
                 <MaterialLink
                     component={RouterLink}
                     className="navbar-nav-items"
+                    to="/home"
                 >
                     Home
                 </MaterialLink>
                 <Button
                     variant="contained"
                     className="navbar-nav-items bg-secondary"
+                    onClick={props.handleLogout}
                 >
                     Logout
                 </Button>

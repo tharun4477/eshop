@@ -6,6 +6,7 @@ import { CardMedia } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Link as RouterLink } from "react-router-dom";
+import { useSelector } from 'react-redux';
 import "./product-details.css";
 
 const ProductDetails = React.memo(() => {
@@ -13,10 +14,19 @@ const ProductDetails = React.memo(() => {
     const {state} = useLocation();
     const product = state.product;
     const categorySelect = state.categorySelect;
-    
+    const [quantity, setQuantity] = React.useState(1);
+    const { filters } = useSelector(state => state);
+
+    const handleQuantityChange = (event) => {
+        const newQuantity = event.target.value;
+        if (newQuantity >= 1 && newQuantity <= product.quantity) {
+          setQuantity(newQuantity);
+        }
+    };
+
     return (
         <Box className="product-detail-section">
-            <ProductCategoryTabs categorySelect={categorySelect} />
+            <ProductCategoryTabs  category={filters} categorySelect={categorySelect} />
             <Box className="product-detail">
                 <CardMedia
                     className="product-image"
@@ -39,8 +49,12 @@ const ProductDetails = React.memo(() => {
                         id="outlined-required"
                         label="Enter the quantity"
                         defaultValue="1"
+                        type="number"
+                        value={quantity}
+                        onChange={handleQuantityChange}
+                        inputProps={{ min: "0", max: product.quantity, step: "1" }}
                     />
-                    <RouterLink className='link-decoration' to={{ pathname:"/orders", state:{product} }}>
+                    <RouterLink className='link-decoration' to={{ pathname:"/orders", state:{product, quantity} }}>
                         <Button className='bg-primary product-order' variant="contained">PLACE ORDER</Button>
                     </RouterLink>
                 </Box>

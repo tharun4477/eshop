@@ -11,6 +11,7 @@
 
 .card {
     max-width: 350px;
+    min-width: 350px;
     margin-left: 100px;
     margin-bottom: 50px;
 }
@@ -35,4 +36,9 @@
     margin-left: 100px;
     margin-bottom: 20px;
     width:200px;
+}
+
+.product-page .home-notification-section div{
+    background-color: rgb(71, 184, 71);
+    color: white;
 }
