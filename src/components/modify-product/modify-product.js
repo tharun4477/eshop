@@ -64,7 +64,7 @@ const ModifyProduct = React.memo(() => {
         const formData = new FormData(event.currentTarget);
         const modifiedProduct = Object.fromEntries(formData);
         const updatedProductInfo= productInfo.map((product)=>{
-            if(product.name == targetProduct.name){
+            if(product.name === targetProduct.name){
                 return {id: product.id, ...modifiedProduct};
             }else{
                 return product;

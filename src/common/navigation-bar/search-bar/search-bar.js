@@ -43,7 +43,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-const SearchBar= React.memo(()=>{
+const SearchBar= React.memo((props)=>{
     return(
         <Search>
         <SearchIconWrapper>
@@ -52,9 +52,7 @@ const SearchBar= React.memo(()=>{
         <StyledInputBase
             placeholder="Search…"
             inputProps={{ 'aria-label': 'search' }}
-            onChange={(event)=>{
-                console.log(event.target.value);
-            }}
+            onChange={props.handleSearch}
         />
     </Search>
     );

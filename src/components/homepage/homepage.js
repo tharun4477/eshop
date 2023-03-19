@@ -17,14 +17,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import Select from "react-select";
-import Modal from 'react-modal';
 
 const Homepage = () => {
-  const { signin, productInfo, countryCurrency, filters, homeNotification } = useSelector(state => state);
-  const [category, setcategory] = React.useState("all");
-  const [sortby, setsortby] = React.useState("default");
-  const [filteredInfo, setFilteredInfo] = React.useState([...productInfo]);
-
+  const { signin, productInfo, filteredInfo, category, sortby, 
+    search, countryCurrency, filters, homeNotification } = useSelector(state => state);
   const dispatch = useDispatch();
 
   const options = [
@@ -54,13 +50,14 @@ const Homepage = () => {
       default:
         break;
     }
-    setsortby(event.value);
-    setFilteredInfo([...filteredInfo]);
+    filteredInfo = filteredInfo.filter(product => product.name.toLowerCase().includes(search.toLowerCase()) ||  search === "" ? true : false);
+    dispatch({ type: "UPDATE_FILTERED_INFO", payload: filteredInfo });
+    dispatch({ type: "UPDATE_SORT_BY", payload: event.value });
   }
 
   const onCategorySelect = (event) => {
     const filterInput = event.target.textContent;
-    let filteredInfo = productInfo;
+    let filteredInfo = [...productInfo];
 
     filteredInfo = filteredInfo.filter(product => product.category === filterInput || filterInput === "all" ? true : false);
 
@@ -77,15 +74,16 @@ const Homepage = () => {
       default:
         break;
     }
-    setcategory(event.target.value);
-    setFilteredInfo([...filteredInfo]);
+    filteredInfo = filteredInfo.filter(product => product.name.toLowerCase().includes(search.toLowerCase()) ||  search === "" ? true : false);
+    dispatch({ type: "UPDATE_FILTERED_INFO", payload: filteredInfo });
+    dispatch({ type: "UPDATE_CATEGORY", payload: event.target.value });
   }
 
   const onDeleteProduct = (targetProduct, event) => {
-    const updatedInfo = productInfo.filter(product => targetProduct != product);
+    const updatedInfo = productInfo.filter(product => targetProduct !== product);
     dispatch({ type: "DELETE_PRODUCT_INFO", payload: updatedInfo });
     dispatch({ type: "SET_HOME_NOTIFICATION", payload: { status: true, message: "Product " + targetProduct.name + " deleted successfully" } });
-    setFilteredInfo(updatedInfo);
+    dispatch({ type: "UPDATE_FILTERED_INFO", payload: filteredInfo });
   }
 
   const onClose = (event) => {

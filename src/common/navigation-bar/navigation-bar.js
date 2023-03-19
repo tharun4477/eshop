@@ -13,13 +13,38 @@ import "./navigation-bar.css";
 import { useHistory } from 'react-router-dom';
 
 const NavigationBar = React.memo(() => {
+    const { signin, productInfo, filteredInfo, category, sortby } = useSelector(state => state);
     const dispatch = useDispatch();
     const history = useHistory();
-    const { signin } = useSelector(state => state);
     const onLogout = () => {
         dispatch({ type: "SET_LOGOUT" });
         history.push("/login");
     }
+
+    const onSearch= (event) => {
+
+        let filteredInfo = [...productInfo];
+    
+        filteredInfo = filteredInfo.filter(product => product.category === category || category === "all" ? true : false);
+    
+        switch (sortby) {
+          case "hightolow":
+            filteredInfo = filteredInfo.sort((product1, product2) => product2.price - product1.price);
+            break;
+          case "lowtohigh":
+            filteredInfo = filteredInfo.sort((product1, product2) => product1.price - product2.price);
+            break;
+          case "newest":
+            filteredInfo = filteredInfo.sort((product1, product2) => product2.id - product1.id);
+            break;
+          default:
+            break;
+        }
+        filteredInfo = filteredInfo.filter(product => product.name.toLowerCase().includes(event.target.value.toLowerCase()) ||  event.target.value === "" ? true : false);
+
+        dispatch({ type: "UPDATE_FILTERED_INFO", payload: filteredInfo });
+        dispatch({ type: "UPDATE_SEARCH", payload: event.target.value });
+      }
 
     return (
         <Box className='box-container'>
@@ -33,7 +58,8 @@ const NavigationBar = React.memo(() => {
                             upGrad E-Shop
                         </Typography>
                     </Box>
-                    {signin.isAdmin ? <AdminNavigationItems handleLogout={onLogout} /> : signin.isNormalUser ? <NomralUserNavigationItems handleLogout={onLogout} /> : <SignInnNavigationItems />}
+                    {signin.isAdmin ? <AdminNavigationItems handleSearch={onSearch} handleLogout={onLogout} /> 
+                    : signin.isNormalUser ? <NomralUserNavigationItems handleSearch={onSearch} handleLogout={onLogout} /> : <SignInnNavigationItems />}
                 </Toolbar>
             </AppBar>
         </Box>

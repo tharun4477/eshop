@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import NavigationBar from "../../common/navigation-bar/navigation-bar";
 import SignIn from "../signin/signin";
 import SignUp from "../signup/signup";
@@ -60,6 +60,9 @@ const Eshop = React.memo(() => {
     <div style={{ display: "flex", flexDirection: "column" }}>
       <Router>
         <NavigationBar />
+        <Route exact path="/">
+          <Redirect to="/login" />
+        </Route>
         <Route path="/login" render={({ history }) =>
           <SignIn
             signinInfo={signin} handleSubmit={(event) => onSignInSubmit(event, history)} />}

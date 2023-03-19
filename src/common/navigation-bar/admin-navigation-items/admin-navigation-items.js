@@ -8,7 +8,7 @@ import SearchBar from "../search-bar/search-bar";
 const AdminNavigationItems =React.memo((props)=> {
     return (
         <Box className="navbar">
-            <SearchBar />
+            <SearchBar handleSearch={props.handleSearch}/>
             <Box className="box-container" ></Box>
             <Box className="navbar-nav" >
                 <MaterialLink
