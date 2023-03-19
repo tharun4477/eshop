@@ -18,33 +18,39 @@ import AddressForm from '../address-form/address-form';
 
 const steps = ['Items', 'Select Address', 'Confirm Order'];
 
+// This is a memoized functional component that displays a order page
 const Order = React.memo((props) => {
 
-    const { addressInfo } = useSelector(state => state);
-    const { state } = useLocation();
-    const history = useHistory();
-    const [open, setOpen] = React.useState({status: false, message:null});
-    const [orderState, setOrderState] = React.useState(0);
-    const [orderAddress, setOrderAddress] = React.useState(null);
+    const { addressInfo } = useSelector(state => state); // Selecting address info from Redux store
+    const { state } = useLocation();     // Getting product and quantity information from previous route using useLocation hook
+    const history = useHistory();     // Getting history object from react-router-dom
+    const [open, setOpen] = React.useState({status: false, message:null});     // Using React.useState to manage open/close state of the alert dialog
+    const [orderState, setOrderState] = React.useState(0); // Using React.useState to manage order state
+    const [orderAddress, setOrderAddress] = React.useState(null);     // Using React.useState to manage selected order address
 
+    // Extracting product and quantity data from location state
     const product = state.product;
     const quantity = state.quantity;
-    const dispatch = useDispatch();
+    const dispatch = useDispatch();     // Getting dispatch function from useDispatch hook to update state
 
+    // Function to handle selecting a new order address
     const onAddressSelect = (event) => {
         const input = {value:event.value, label: event.label};
         setOrderAddress(input);
     }
 
+    // Function to handle form submission of new order address
     const onSaveAddressSubmit = (event) => {
         event.preventDefault();
-        
+        // Using FormData to extract form data and converting it into an object
         const formData = new FormData(event.currentTarget);
         const addressData = Object.fromEntries(formData);
+         // Creating a new addressInfo object with user-entered data and dispatching it to the store
         const addressInfo={value:addressData, label: addressData.name + "->" + addressData.city+","+ addressData.state}
         dispatch({ type: "POST_ADDRESS_INFO", payload: addressInfo });
     };
 
+    // Function to handle clicking the "next" button
     const onHandleNext = (event) => {
         if (orderState === 1 && orderAddress == null) {
             setOpen({ message: "Please select address!", status: true });
@@ -65,14 +71,17 @@ const Order = React.memo((props) => {
         setOrderState(orderState+1)
     };
 
+    // Function to handle clicking the "back" button
     const onHandleBack = (event) => {
         setOrderState(orderState-1)
     };
 
+    // Function to handle closing the alert dialog
     const onClose = (event) => {
         setOpen({ message: null, status: false });
     };
 
+    // JSX for the close icon button in the alert dialog
     const action = (
         <React.Fragment>
             <IconButton
@@ -86,8 +95,10 @@ const Order = React.memo((props) => {
         </React.Fragment>
     );
 
+    // Render the component's JSX
     return (
         <Box className="order-steps">
+            {/* Step progress bar */}
             <Stepper activeStep={orderState}>
                 {steps.map((label, index) => {
                     return (
@@ -97,6 +108,8 @@ const Order = React.memo((props) => {
                     );
                 })}
             </Stepper>
+
+            {/* Notification component */}
             <div className='notification-section' >
                 <Snackbar
                     open={open.status}
@@ -108,6 +121,7 @@ const Order = React.memo((props) => {
                 />
             </div>
 
+            {/* Order details section */}
             {orderState === 0 ?
                 (
                     <Box className="order-detail-section">
@@ -131,6 +145,7 @@ const Order = React.memo((props) => {
                 ) : null
             }
 
+            {/* Address selection section */}
             {orderState === 1 ?
                 (
                     <React.Fragment>
@@ -156,6 +171,8 @@ const Order = React.memo((props) => {
 
                 ) : null
             }
+
+            {/* Order confirmation section */}
             {orderState === 2 ?
                 (
                     <Card className="confirm-order">

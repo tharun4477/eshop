@@ -110,7 +110,7 @@ const AddProduct = React.memo((props) => {
                         <Grid item xs={12}>
                             <CreatableSelect
                                 className='add-product-select'
-                                options={options.filter(filter => filter.label != "all")}
+                                options={options.filter(filter => filter.label !== "all")}
                                 onChange={(newValue) => setValue(newValue)}
                                 value={value}
                                 name="category"

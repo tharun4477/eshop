@@ -13,6 +13,8 @@ import { Link as MaterialLink } from "@mui/material";
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText';
 
+// This is a functional component that displays a copyright notice
+// It receives props which are spread into a Typography component
 function Copyright(props) {
     return (
         <Typography variant="body2" {...props} >
@@ -26,7 +28,9 @@ function Copyright(props) {
     );
 }
 
+// This is a memoized functional component that displays a sign-form form
 const SignUp = React.memo((props)=> {
+   // This extracts the isError boolean value from the signinInfo object
     const signupInfo= props.signupInfo;    
     return (
             <Container className="" component="main" maxWidth="xs" >

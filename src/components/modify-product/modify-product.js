@@ -10,14 +10,17 @@ import "./modify-product.css"
 import { useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+
+// This is a memoized functional component that displays a product modification page form
 const ModifyProduct = React.memo(() => {
 
-    const { filters, productInfo } = useSelector(state => state);
-    const { state } = useLocation();
-    const history = useHistory();
-    const targetProduct = state.product;
-    const dispatch = useDispatch();
-
+    const { filters, productInfo } = useSelector(state => state);     // Use the useSelector hook to retrieve the filters and productInfo from the Redux store
+    const { state } = useLocation();     // Use the useLocation hook to retrieve the product being modified from the route state
+    const history = useHistory();     // Use the useHistory hook to enable redirection after the product has been modified
+    const targetProduct = state.product;     // Get the product being modified from the route state
+    const dispatch = useDispatch();     // Use the useDispatch hook to enable dispatching actions to the Redux store
+    
+    // Define state variables for the form fields
     const [name, setName] = React.useState(targetProduct.name);
     const [category, setCategory] = React.useState(targetProduct.category);
     const [manufacturer, setManufacturer] = React.useState(targetProduct.manufacturer);
@@ -26,11 +29,13 @@ const ModifyProduct = React.memo(() => {
     const [imageUrl, setImageUrl] = React.useState(targetProduct.source);
     const [description, setDescription] = React.useState(targetProduct.description);
 
+    // Define a helper function to create a filter option object from a label
     const createOption = (label) => ({
         label,
         value: label.toLowerCase().replace(/\W/g, "")
     });
 
+     // Define event handlers for the form fields
     const OnNameChangeHandler = (e) => {
         setName(e.target.value);
     }
@@ -59,6 +64,7 @@ const ModifyProduct = React.memo(() => {
         setDescription(e.target.value);
     }
 
+    // Define an event handler for when the form is submitted
     const onModifyProductSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
@@ -71,7 +77,10 @@ const ModifyProduct = React.memo(() => {
             }
         });
 
+        // Dispatch an action to update the product info array in the Redux store
         dispatch({ type: "UPDATE_PRODUCT_INFO", payload: updatedProductInfo });
+        
+        // If the modified product category is not already a filter option, add it to the filters array in the Redux store
         if (!filters.some(filter => filter.label.toLowerCase() === modifiedProduct.category.toLowerCase())) {
             dispatch({ type: "POST_FILTERS", payload: createOption(modifiedProduct.category) });
         }

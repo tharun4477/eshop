@@ -5,6 +5,8 @@ import { Link as MaterialLink } from "@mui/material";
 import Button from '@mui/material/Button';
 import SearchBar from "../search-bar/search-bar";
 
+//This is a functional component that exports a admin User Navigation Items for the pages. 
+//It renders a fragment of navigation items specific to the admin user signed in page.
 const AdminNavigationItems =React.memo((props)=> {
     return (
         <Box className="navbar">

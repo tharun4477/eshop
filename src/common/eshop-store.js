@@ -6,6 +6,7 @@ import airpodsImage from '../assets/images/airpods.png';
 import sanitizerImage from '../assets/images/sanitizer.png';
 import jeansImage from '../assets/images/jeans.png';
 
+// The initial state of the global store that holds data used throughout the React app.
 let initialState = {
     signin: {
         isError: false,
@@ -188,6 +189,12 @@ let initialState = {
     }
 }
 
+/**
+Reducer function that updates the global state of the React application based on the dispatched action.
+@param {Object} state - The current state of the application.
+@param {Object} action - The action object that describes the type of update to perform on the state.
+@returns {Object} - The updated state of the application.
+*/
 function reducer(state = initialState, action) {
     switch (action.type) {
         case "SET_USER_ROLE":

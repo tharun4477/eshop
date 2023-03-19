@@ -3,6 +3,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/node/ToggleButtonGroup/ToggleButtonGroup';
 import "./product-category-tabs.css";
 
+// This is a functional component called 'ProductCategoryTabs' that renders a group of toggle buttons
 const ProductCategoryTabs = React.memo((props) => {
     return (
         <ToggleButtonGroup

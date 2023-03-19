@@ -43,6 +43,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
+//This is a functional component that exports a search bar for the pages. 
+//It renders a fragment of navigation items specific to the signed in page.
 const SearchBar= React.memo((props)=>{
     return(
         <Search>

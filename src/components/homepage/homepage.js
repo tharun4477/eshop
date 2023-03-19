@@ -18,25 +18,30 @@ import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import Select from "react-select";
 
+// This is a memoized functional component that displays a home page 
 const Homepage = () => {
-  const { signin, productInfo, filteredInfo, category, sortby, 
+  // Destructuring state and dispatch from Redux store
+  const { signin, productInfo, filteredInfo, category, sortby,
     search, countryCurrency, filters, homeNotification } = useSelector(state => state);
   const dispatch = useDispatch();
 
+  // Array of options for sorting products
   const options = [
     { value: "all", label: "Default" },
     { value: "hightolow", label: "Price: High to Low" },
     { value: "lowtohigh", label: "Price: Low to High" },
     { value: "newest", label: "Newest" }
   ];
-  
 
+  // Function to handle sorting products by price or by newest arrival
   const onSortbySelect = (event) => {
 
-    let filteredInfo = [...productInfo];
+    let filteredInfo = [...productInfo]; /// Creating a copy of productInfo to filter it
 
-    filteredInfo = filteredInfo.filter(product => product.category === category || category === "all" ? true : false);
+    filteredInfo = filteredInfo.filter(product =>
+      product.category === category || category === "all" ? true : false); // Filtering by category if it is specified
 
+    // Sorting the filtered products based on selected sort option
     switch (event.value) {
       case "hightolow":
         filteredInfo = filteredInfo.sort((product1, product2) => product2.price - product1.price);
@@ -50,17 +55,22 @@ const Homepage = () => {
       default:
         break;
     }
-    filteredInfo = filteredInfo.filter(product => product.name.toLowerCase().includes(search.toLowerCase()) ||  search === "" ? true : false);
+    // Filtering the products based on search input if it is specified
+    filteredInfo = filteredInfo.filter(product => product.name.toLowerCase().includes(search.toLowerCase()) || search === "" ? true : false);
+    // Updating the filtered products and sort option in Redux store
     dispatch({ type: "UPDATE_FILTERED_INFO", payload: filteredInfo });
     dispatch({ type: "UPDATE_SORT_BY", payload: event.value });
   }
 
+  // Function to handle filtering products by category
   const onCategorySelect = (event) => {
-    const filterInput = event.target.textContent;
+    const filterInput = event.target.textContent; // Creating a copy of productInfo to filter it
     let filteredInfo = [...productInfo];
 
+    // Filtering the products based on selected category
     filteredInfo = filteredInfo.filter(product => product.category === filterInput || filterInput === "all" ? true : false);
 
+    // Sorting the filtered products based on selected sort option
     switch (sortby) {
       case "hightolow":
         filteredInfo = filteredInfo.sort((product1, product2) => product2.price - product1.price);
@@ -74,22 +84,30 @@ const Homepage = () => {
       default:
         break;
     }
-    filteredInfo = filteredInfo.filter(product => product.name.toLowerCase().includes(search.toLowerCase()) ||  search === "" ? true : false);
+    // Filtering the products based on search input if it is specified
+    filteredInfo = filteredInfo.filter(product => product.name.toLowerCase().includes(search.toLowerCase()) || search === "" ? true : false);
+    // Updating the filtered products and selected category in Redux store
     dispatch({ type: "UPDATE_FILTERED_INFO", payload: filteredInfo });
     dispatch({ type: "UPDATE_CATEGORY", payload: event.target.value });
   }
 
+  // This function is triggered when a user clicks on the delete button for a product.
+  // It receives the target product as a parameter and an event object.
   const onDeleteProduct = (targetProduct, event) => {
-    const updatedInfo = productInfo.filter(product => targetProduct !== product);
-    dispatch({ type: "DELETE_PRODUCT_INFO", payload: updatedInfo });
-    dispatch({ type: "SET_HOME_NOTIFICATION", payload: { status: true, message: "Product " + targetProduct.name + " deleted successfully" } });
-    dispatch({ type: "UPDATE_FILTERED_INFO", payload: filteredInfo });
+    const updatedInfo = productInfo.filter(product => targetProduct !== product); // A new array of productInfo is created by filtering out the target product.
+    dispatch({ type: "DELETE_PRODUCT_INFO", payload: updatedInfo }); // The updated product info is dispatched to the store, which updates the state of the app.
+    dispatch({ type: "SET_HOME_NOTIFICATION", payload: { status: true, message: "Product " + targetProduct.name + " deleted successfully" } }); // A success notification is dispatched to the store, which displays a message to the user.
+    dispatch({ type: "UPDATE_FILTERED_INFO", payload: filteredInfo }); // The filteredInfo is dispatched to the store, which updates the state of the app.
   }
 
+  // This function is triggered when the close button is clicked on the success notification.
+  // It receives an event object as a parameter.
   const onClose = (event) => {
+    // A false status is dispatched to the store, which hides the success notification.
     dispatch({ type: "SET_HOME_NOTIFICATION", payload: { status: false } });
   };
 
+ // Defining the action component for the Snackbar notification
   const action = (
     <React.Fragment>
       <IconButton

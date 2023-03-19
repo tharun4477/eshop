@@ -3,6 +3,8 @@ import { Box } from "@mui/system";
 import { Link as RouterLink } from "react-router-dom";
 import { Link as MaterialLink } from "@mui/material";
 
+//This is a functional component that exports a navigation item for the sign-in page. 
+//It renders a fragment of navigation items specific to the sign-in page.
 export default function SignInnNavigationItems() {
     return (
         <Box className="navbar">

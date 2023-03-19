@@ -14,6 +14,8 @@ import { Link as MaterialLink } from "@mui/material";
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText';
 
+// This is a functional component that displays a copyright notice
+// It receives props which are spread into a Typography component
 function Copyright(props) {
     return (
         <Typography variant="body2" {...props} >
@@ -27,10 +29,13 @@ function Copyright(props) {
     );
 }
 
+// This creates a custom theme using the createTheme function from Material UI
 const theme = createTheme();
 
+// This is a memoized functional component that displays a sign-in form
+// It receives props, including a signinInfo object that contains a boolean isError field
 const SignIn =React.memo((props)=>{
-
+    // This extracts the isError boolean value from the signinInfo object
     const isError=props.signinInfo.isError;
     return (
         <ThemeProvider theme={theme} > 

@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import "./address-form.css"
 
-
+// This is a memoized functional component that displays a address form
 const AddressForm=React.memo((props)=>{
     return(
         <Container component="main" maxWidth="xs" >

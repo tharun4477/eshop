@@ -1,3 +1,4 @@
+// Importing necessary modules and components
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
@@ -11,10 +12,13 @@ import Order from "../orders/order";
 import AddProduct from "../add-product/add-product";
 import ModifyProduct from "../modify-product/modify-product";
 
+// Functional component Eshop
 const Eshop = React.memo(() => {
+  // Getting the state variables signin, signup, and userInfo from the redux store
   const { signin, signup, userInfo } = useSelector(state => state);
+  // Creating a dispatch function
   const dispatch = useDispatch();
-
+// Function to handle submit event of sign-in form
   const onSignInSubmit = (event, history) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -22,6 +26,7 @@ const Eshop = React.memo(() => {
     const email = signData.email;
     const password = signData.password;
 
+    // Checking if the user exists and the password is correct
     if (userInfo[email] && userInfo[email].password === password) {
       if (email === "admin@gmail.com") {
         dispatch({ type: "SET_USER_ROLE", payload: { isError: false, isAdmin: true } });
@@ -34,6 +39,7 @@ const Eshop = React.memo(() => {
     }
   };
 
+  // Function to handle submit event of sign-up form
   const onSignUpSubmit = (event, history) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -41,9 +47,11 @@ const Eshop = React.memo(() => {
     const email = signData.email;
     const password = signData.password;
     const confirmPassword = signData.confirmPassword;
+    // Checking if the user already exists
     if (userInfo[email]) {
       dispatch({ type: "POST_SIGN_UP_INFO", payload: { isUserExits: true, isPasswordMatch: false } });
     }
+    // Checking if the password and confirm password fields match
     else if (password !== confirmPassword) {
 
       dispatch({ type: "POST_SIGN_UP_INFO", payload: { isUserExits: false, isPasswordMatch: true } });
